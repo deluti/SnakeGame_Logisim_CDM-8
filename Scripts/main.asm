@@ -1,5 +1,19 @@
 asect 0x00
 
+init:
+	# вначале загружаем в память переменные
+	ldi r0, 1           # r0 = текущий X
+	ldi r1, HEAD_X
+	st r1, r0           # сохраняем X
+    
+	ldi r0, 1           # r0 = текущий Y
+	ldi r1, HEAD_Y
+	st r1, r0           # сохраняем Y
+
+	ldi r0, 0           # r0 = текущий DIR
+	ldi r1, DIRECT
+	st r1, r0           # сохраняем DIR
+
 start:
     ldi r0, DIRECT
     ld r0, r0           # r0 = DIRECT (00, 01, 10 или 11)
@@ -81,40 +95,11 @@ start:
         st r2, r1
     fi
 
-	ldi r0, HEAD_X
-	ld r0, r0           # r0 = текущий X
-	ldi r1, OUT_X        # АДРЕС 0xF0, а не значение из памяти!
-	ld r1, r1
-	st r1, r0           # сохраняем X по адресу 0xF0
-    
-    ldi r0, HEAD_Y
-	ld r0, r0           # r0 = текущий Y
-	ldi r1, OUT_Y       # АДРЕС 0xF1
-	ld r1, r1
-	st r1, r0           # сохраняем Y по адресу 0xF1
-
-    # Вывод X на шину out
-    ldi r0, OUT_X
-	ld r0, r0
-    ld r0, r0           # r0 = X
-    #move r0, r0         # просто чтобы выставить значение на шину out
-
-    # Вывод Y на шину out
-    ldi r0, OUT_Y
-	ld r0, r0
-    ld r0, r0           # r0 = Y
-    #move r0, r0         # выставляем Y на шину
-
 	br start
-    
-
 
 HEAD_X:   dc 0
 HEAD_Y:   dc 0
 LENGTH:   dc 1
-DIRECT:   dc 0    # 00-вниз, 01-вправо, 10-влево, 11-вверх
-
-OUT_X:    dc 0xF0  # сюда будет скопирован X
-OUT_Y:    dc 0xF1  # сюда будет скопирован Y 
+DIRECT:   dc 1    # 00-вниз, 01-вправо, 10-влево, 11-вверх
 
 end
